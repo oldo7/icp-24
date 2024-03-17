@@ -1,4 +1,5 @@
 #include "controllablerobot.h"
+#include "qtimer.h"
 #include "robot.h"
 #include <QGraphicsItem>
 #include <QList>
@@ -8,22 +9,10 @@
 #include <QGraphicsScene>
 #include <QKeyEvent>
 
+extern QTimer * robotTimer;
+
 ControllableRobot::ControllableRobot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene) : Robot(parent, initX, initY, scanAreaSize, scene){
 
-}
-
-void ControllableRobot::keyPressEvent(QKeyEvent *event){
-    // move the player left and right
-    if (event->key() == Qt::Key_Up){
-        move();
-    }
-    else if (event->key() == Qt::Key_Right){
-        rotate(5);
-    }
-    // shoot with the spacebar
-    else if (event->key() == Qt::Key_Left){
-        rotate(-5);
-    }
 }
 
 void ControllableRobot::move(){

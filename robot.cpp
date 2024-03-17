@@ -9,9 +9,6 @@
 extern Simulation * simulation;
 
 Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateBy, bool rotateClockwise, QGraphicsScene * scene): QObject(), QGraphicsPixmapItem(parent){
-    QTimer * timer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),this,SLOT(move()));
-    timer->start(20);
     //set random x position
     setPixmap(QPixmap(":/images/robot.png"));
     //setRect(0,0,30,30);
@@ -77,5 +74,6 @@ void Robot::rotate(double angleToRotate){
 
 bool Robot::checkNoObstacles(){
     QList<QGraphicsItem *> colliding_items = scanArea->collidingItems();
+    qDebug() << colliding_items;
     return colliding_items.size() == 1;
 }
