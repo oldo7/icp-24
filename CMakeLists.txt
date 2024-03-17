@@ -27,6 +27,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         robot.h robot.cpp
         resources.qrc
         controllablerobot.h controllablerobot.cpp
+        scanareat.h scanareat.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

@@ -7,6 +7,7 @@
 #include <QImage>
 #include "robot.h"
 #include "controllablerobot.h"
+#include <QPushButton>
 
 QTimer * robotTimer;
 
@@ -34,7 +35,7 @@ Simulation::Simulation(QWidget *parent) {
     robotTimer = new QTimer(this);
     connect(robotTimer,SIGNAL(timeout()),robot,SLOT(move()));
     connect(robotTimer,SIGNAL(timeout()),robot2,SLOT(move()));
-    robotTimer->start(20);
+    robotTimer->start(5);
 
     //make a controllable robot
     contRobot = new ControllableRobot(0,100,100,80,scene);
@@ -53,32 +54,35 @@ Simulation::Simulation(QWidget *parent) {
     top->setLine(0,0,1000,0);
     scene->addItem(top);
     QGraphicsLineItem * down = new QGraphicsLineItem(0);
-    down->setLine(0,800,1000,800);
+    down->setLine(0,600,1000,600);
     scene->addItem(down);
 
     QPainter painter(this);
     painter.setPen(QPen(Qt::black, 12, Qt::DashDotLine, Qt::RoundCap));
     painter.drawLine(5, 5, 0, 300);
-    //robot->setFlag(QGraphicsItem::ItemIsFocusable);
-    //robot->setFocus();
-    //scene->addItem(boxq);
 
 
-    /*
-    // create the score/health
-    score = new Score();
-    scene->addItem(score);
-    health = new Health();
-    health->setPos(health->x(),health->y()+25);
-    scene->addItem(health);
-    */
+    //pause / resume button
+    // Create the button, make "this" the parent
+    pauseButton = new QPushButton("Pause / Resume", this);
+    // set size and location of the button
+    pauseButton->setGeometry(QRect(QPoint(10, 610), QSize(100, 50)));
 
-    /*
-    // spawn enemies
-    QTimer * timer = new QTimer();
-    QObject::connect(timer,SIGNAL(timeout()),player,SLOT(spawn()));
-    timer->start(2000);
-    */
+    //set cursor
+    cursor = nullptr;
+    setMouseTracking(true);
+    build = nullptr;
+
+    // set size and location of the button
+    pauseButton->setGeometry(QRect(QPoint(10, 610), QSize(100, 50)));
+
+    // Connect button signal to appropriate slot
+    connect(pauseButton, SIGNAL(released()), this, SLOT(pauseSimulation()));
+
+    //obstacle button
+    QPushButton * createObstacleButton = new QPushButton("Create Obstacle", this);
+    createObstacleButton->setGeometry(QRect(QPoint(10, 660), QSize(100, 50)));
+    connect(createObstacleButton, SIGNAL(released()), this, SLOT(buildObstacle()));
 }
 
 void Simulation::keyPressEvent(QKeyEvent *event){
@@ -101,13 +105,52 @@ void Simulation::keyPressEvent(QKeyEvent *event){
             contRobot->rotate(-5);
         }
     }
-    else if (event->key() == Qt::Key_Space){
-        if(robotTimer->isActive()){
-            robotTimer->stop();
-        }
-        else{
-            robotTimer->start();
-        }
+    else if (event->key() == Qt::Key_Down){
+        pauseSimulation();
     }
 }
 
+void Simulation::pauseSimulation(){
+    if(robotTimer->isActive()){
+        robotTimer->stop();
+    }
+    else{
+        robotTimer->start();
+    }
+}
+
+void Simulation::setCursor(int size){
+    if(cursor){
+        scene->removeItem(cursor);
+        delete cursor;
+    }
+    cursor = new QGraphicsRectItem(0);
+    cursor->setRect(0,0,size,size);
+    scene->addItem(cursor);
+}
+
+void Simulation::mouseMoveEvent(QMouseEvent * event){
+    if(cursor){
+        cursor->setPos(event->pos());
+    }
+}
+
+void Simulation::buildObstacle(){
+    if(!build){
+        build = new QGraphicsRectItem();
+        build->setRect(0,0,50,50);
+        setCursor(50);
+    }
+}
+
+void Simulation::mousePressEvent(QMouseEvent * event){
+    if(build){
+        scene->addItem(build);
+        build->setPos(event->pos());
+        cursor = nullptr;
+        build = nullptr;
+    }
+    else{
+        QGraphicsView::mousePressEvent(event);
+    }
+}

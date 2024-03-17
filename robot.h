@@ -1,5 +1,6 @@
 #ifndef ROBOT_H
 #define ROBOT_H
+#include "scanAreaT.h"
 #include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QGraphicsItem>
@@ -8,7 +9,7 @@ class Robot:public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
 protected:
     double angle;
-    QGraphicsRectItem * scanArea;
+    scanAreaT * scanArea;
     bool checkNoObstacles();
     int rotateAngle;
 public:

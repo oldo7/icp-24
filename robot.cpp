@@ -2,6 +2,7 @@
 #include <QTimer>
 #include <QGraphicsScene>
 #include <QList>
+#include "scanareat.h"
 #include "simulation.h"
 #include <QDebug>
 #include <QGraphicsPixmapItem>
@@ -14,7 +15,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int 
     //setRect(0,0,30,30);
     setPos(initX, initY);
 
-    scanArea = new QGraphicsRectItem(this);
+    scanArea = new scanAreaT();
     scanArea->setRect(0,0,scanAreaSize,30);
     scanArea->setPos(x()+30,y());
     scene->addItem(scanArea);
@@ -37,7 +38,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGra
     //setRect(0,0,30,30);
     setPos(initX, initY);
 
-    scanArea = new QGraphicsRectItem(this);
+    scanArea = new scanAreaT();
     scanArea->setRect(0,0,scanAreaSize,30);
     scanArea->setPos(x()+30,y());
     scene->addItem(scanArea);
@@ -74,6 +75,12 @@ void Robot::rotate(double angleToRotate){
 
 bool Robot::checkNoObstacles(){
     QList<QGraphicsItem *> colliding_items = scanArea->collidingItems();
-    qDebug() << colliding_items;
-    return colliding_items.size() == 1;
+    int collisions = colliding_items.size();
+    for( size_t i = 0, n = colliding_items.size(); i < n; i++){
+        scanAreaT * scan = dynamic_cast<scanAreaT *>(colliding_items[i]);
+        if(scan){
+            collisions -= 1;
+        }
+    }
+    return collisions == 1;
 }

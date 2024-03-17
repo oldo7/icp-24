@@ -6,14 +6,25 @@
 #include "controllablerobot.h"
 #include "robot.h"
 #include <QGraphicsScene>
+#include <QPushButton>
 
 class Simulation: public QGraphicsView{
+    Q_OBJECT
 public:
     Simulation(QWidget * parent=0);
     void keyPressEvent(QKeyEvent *event);
     ControllableRobot * contRobot;
     QGraphicsScene * scene;
     Robot * robot;
+    QPushButton * pauseButton;
+    QGraphicsRectItem * cursor;
+    QGraphicsRectItem * build;
+    void setCursor(int size);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+public slots:
+    void pauseSimulation();
+    void buildObstacle();
 };
 
 #endif // SIMULATION_H
