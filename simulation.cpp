@@ -8,6 +8,7 @@
 #include "robot.h"
 #include "controllablerobot.h"
 #include <QPushButton>
+#include <QLineEdit>
 
 QTimer * robotTimer;
 
@@ -33,8 +34,8 @@ Simulation::Simulation(QWidget *parent) {
 
     //robot timer
     robotTimer = new QTimer(this);
-    connect(robotTimer,SIGNAL(timeout()),robot,SLOT(move()));
-    connect(robotTimer,SIGNAL(timeout()),robot2,SLOT(move()));
+    connect(robotTimer,SIGNAL(timeout()),robot,SLOT(robotStep()));
+    connect(robotTimer,SIGNAL(timeout()),robot2,SLOT(robotStep()));
     robotTimer->start(5);
 
     //make a controllable robot
@@ -80,9 +81,30 @@ Simulation::Simulation(QWidget *parent) {
     connect(pauseButton, SIGNAL(released()), this, SLOT(pauseSimulation()));
 
     //obstacle button
-    QPushButton * createObstacleButton = new QPushButton("Create Obstacle", this);
-    createObstacleButton->setGeometry(QRect(QPoint(10, 660), QSize(100, 50)));
-    connect(createObstacleButton, SIGNAL(released()), this, SLOT(buildObstacle()));
+    QPushButton * createSmallObstacleButton = new QPushButton("Create small Obstacle", this);
+    createSmallObstacleButton->setGeometry(QRect(QPoint(10, 660), QSize(100, 50)));
+    connect(createSmallObstacleButton, SIGNAL(released()), this, SLOT(buildSmallObstacle()));
+
+    QPushButton * createMediumObstacleButton = new QPushButton("Create medium Obstacle", this);
+    createMediumObstacleButton->setGeometry(QRect(QPoint(10, 710), QSize(100, 50)));
+    connect(createMediumObstacleButton, SIGNAL(released()), this, SLOT(buildMediumObstacle()));
+
+    QPushButton * createLargeObstacleButton = new QPushButton("Create large Obstacle", this);
+    createLargeObstacleButton->setGeometry(QRect(QPoint(120, 610), QSize(100, 50)));
+    connect(createLargeObstacleButton, SIGNAL(released()), this, SLOT(buildLargeObstacle()));
+
+    QPushButton * cancelBuildButton = new QPushButton("Cancel", this);
+    cancelBuildButton->setGeometry(QRect(QPoint(120, 660), QSize(100, 50)));
+    connect(cancelBuildButton, SIGNAL(released()), this, SLOT(cancelBuild()));
+
+    QLineEdit * xcoord = new QLineEdit(this);
+    xcoord->setGeometry(QRect(QPoint(230, 610), QSize(100, 50)));
+    xcoord->setEchoMode(QLineEdit::Normal);
+    xcoord->setPlaceholderText("X coordinate");
+
+    QPushButton * newRobotButton = new QPushButton("New Robot", this);
+    newRobotButton->setGeometry(QRect(QPoint(120, 710), QSize(100, 50)));
+    connect(newRobotButton, SIGNAL(released()), this, SLOT(newRobot()));
 }
 
 void Simulation::keyPressEvent(QKeyEvent *event){
@@ -95,14 +117,14 @@ void Simulation::keyPressEvent(QKeyEvent *event){
     }
     else if (event->key() == Qt::Key_Right){
         if(robotTimer->isActive()){
-            contRobot->rotate(5);
+            contRobot->setRotate(5);
         }
 
     }
     // shoot with the spacebar
     else if (event->key() == Qt::Key_Left){
         if(robotTimer->isActive()){
-            contRobot->rotate(-5);
+            contRobot->setRotate(-5);
         }
     }
     else if (event->key() == Qt::Key_Down){
@@ -135,22 +157,52 @@ void Simulation::mouseMoveEvent(QMouseEvent * event){
     }
 }
 
-void Simulation::buildObstacle(){
-    if(!build){
-        build = new QGraphicsRectItem();
-        build->setRect(0,0,50,50);
-        setCursor(50);
+void Simulation::buildSmallObstacle(){
+    buildObstacle(50);
+}
+
+void Simulation::buildMediumObstacle(){
+    buildObstacle(100);
+}
+
+void Simulation::buildLargeObstacle(){
+    buildObstacle(200);
+}
+
+void Simulation::buildObstacle(int size){
+    build = new QGraphicsRectItem();
+    build->setRect(0,0,size,size);
+    setCursor(size);
+    buildsize = size;
+}
+
+void Simulation::cancelBuild(){
+    if(build){
+        scene->removeItem(cursor);
+        delete build;
+        delete cursor;
+        cursor = nullptr;
+        build = nullptr;
+        buildsize = 0;
     }
 }
 
 void Simulation::mousePressEvent(QMouseEvent * event){
     if(build){
-        scene->addItem(build);
-        build->setPos(event->pos());
-        cursor = nullptr;
-        build = nullptr;
+        if(event->pos().x() + buildsize < 1000 && event->pos().y() + buildsize < 600){
+            qDebug() << event->pos().x();
+            scene->addItem(build);
+            build->setPos(event->pos());
+            cursor = nullptr;
+            build = nullptr;
+            buildsize = 0;
+        }
     }
     else{
         QGraphicsView::mousePressEvent(event);
     }
+}
+
+void Simulation::newRobot(){
+    //build = new Robot(0,0,0,80,scene);
 }

@@ -19,12 +19,18 @@ public:
     QPushButton * pauseButton;
     QGraphicsRectItem * cursor;
     QGraphicsRectItem * build;
+    int buildsize;
     void setCursor(int size);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
+    void buildObstacle(int size);
 public slots:
     void pauseSimulation();
-    void buildObstacle();
+    void buildSmallObstacle();
+    void buildMediumObstacle();
+    void buildLargeObstacle();
+    void cancelBuild();
+    void newRobot();
 };
 
 #endif // SIMULATION_H

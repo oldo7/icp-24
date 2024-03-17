@@ -7,6 +7,9 @@
 #include <QDebug>
 #include <QGraphicsPixmapItem>
 
+#include "unistd.h"
+#include <QThread>
+
 extern Simulation * simulation;
 
 Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateBy, bool rotateClockwise, QGraphicsScene * scene): QObject(), QGraphicsPixmapItem(parent){
@@ -30,7 +33,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int 
         rotateAngle *= -1;
     }
     //test
-    rotate(45);
+    setRotate(45);
 }
 
 Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene){
@@ -48,11 +51,18 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGra
     scanArea->setPen(pen);
 }
 
+void Robot::robotStep(){
+    if(angleToRotate == 0){
+        move();
+    }else{
+        rotate();
+    }
+}
+
 void Robot::move(){
     // move enemy down
-
     if(!checkNoObstacles()){
-        rotate(rotateAngle);
+        setRotate(rotateAngle);
         return;
     }
 
@@ -65,12 +75,24 @@ void Robot::move(){
 
 }
 
-void Robot::rotate(double angleToRotate){
-    angle += angleToRotate;
+void Robot::rotate(){
+    if(angleToRotate > 0){
+        angle += 1;
+        angleToRotate -= 1;
+    }
+    else{
+        angle -= 1;
+        angleToRotate += 1;
+    }
+
     setTransformOriginPoint(15,15);
     scanArea->setTransformOriginPoint(-15, 15);
     setRotation(angle);
     scanArea->setRotation(angle);
+}
+
+void Robot::setRotate(int angle){
+    angleToRotate += angle;
 }
 
 bool Robot::checkNoObstacles(){
