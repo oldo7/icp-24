@@ -36,9 +36,11 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int 
         rotateAngle *= -1;
     }
 
-    qDebug() << "my initial rotation is " << initRotate;
-
-    setRotate(initRotate);
+    angle += initRotate;
+    setTransformOriginPoint(15,15);
+    scanArea->setTransformOriginPoint(-15, 15);
+    setRotation(angle);
+    scanArea->setRotation(angle);
 }
 
 Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene){
