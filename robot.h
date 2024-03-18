@@ -16,7 +16,7 @@ protected:
     void move();
     void rotate();
 public:
-    Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateAngle, bool rotateClockwise, QGraphicsScene * scene);
+    Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateAngle, bool rotateClockwise, int initRotate, QGraphicsScene * scene);
     Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene);
     void setRotate(int angle);
 public slots:

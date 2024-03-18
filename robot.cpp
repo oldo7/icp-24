@@ -11,9 +11,12 @@
 #include <QThread>
 
 extern Simulation * simulation;
+extern QTimer * robotTimer;
 
-Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateBy, bool rotateClockwise, QGraphicsScene * scene): QObject(), QGraphicsPixmapItem(parent){
-    //set random x position
+Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateBy, bool rotateClockwise, int initRotate, QGraphicsScene * scene): QObject(), QGraphicsPixmapItem(parent){
+    //subscribe to the global robot timer
+    connect(robotTimer,SIGNAL(timeout()),this,SLOT(robotStep()));
+
     setPixmap(QPixmap(":/images/robot.png"));
     //setRect(0,0,30,30);
     setPos(initX, initY);
@@ -32,8 +35,10 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int 
     if(!rotateClockwise){
         rotateAngle *= -1;
     }
-    //test
-    setRotate(45);
+
+    qDebug() << "my initial rotation is " << initRotate;
+
+    setRotate(initRotate);
 }
 
 Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene){

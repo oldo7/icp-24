@@ -30,7 +30,6 @@ public slots:
     void buildMediumObstacle();
     void buildLargeObstacle();
     void cancelBuild();
-    void newRobot();
 };
 
 #endif // SIMULATION_H

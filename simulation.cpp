@@ -5,11 +5,13 @@
 #include <QFont>
 #include <QBrush>
 #include <QImage>
+#include "addrobot.h"
 #include "robot.h"
 #include "controllablerobot.h"
 #include <QPushButton>
 #include <QLineEdit>
 
+AddRobot * addRobot;
 QTimer * robotTimer;
 
 Simulation::Simulation(QWidget *parent) {
@@ -17,6 +19,10 @@ Simulation::Simulation(QWidget *parent) {
     scene = new QGraphicsScene();
     scene->setSceneRect(0,0,1000,800); // make the scene 800x600 instead of infinity by infinity (default)
 
+    //robot timer
+    robotTimer = new QTimer(this);
+    //connect(robotTimer,SIGNAL(timeout()),robot2,SLOT(robotStep()));
+    robotTimer->start(5);
 
 
     // make the newly created scene the scene to visualize (since Game is a QGraphicsView Widget,
@@ -27,16 +33,11 @@ Simulation::Simulation(QWidget *parent) {
     setFixedSize(1000,800);
 
     // create a robot
-    robot = new Robot(0,300,300, 150, 50, true, scene);
-    Robot * robot2 = new Robot(0,100,300, 150, 50, true, scene);
+    robot = new Robot(0,300,300, 150, 50, true, 45, scene);
+    Robot * robot2 = new Robot(0,100,300, 150, 45, true, 90, scene);
     scene->addItem(robot);
     scene->addItem(robot2);
 
-    //robot timer
-    robotTimer = new QTimer(this);
-    connect(robotTimer,SIGNAL(timeout()),robot,SLOT(robotStep()));
-    connect(robotTimer,SIGNAL(timeout()),robot2,SLOT(robotStep()));
-    robotTimer->start(5);
 
     //make a controllable robot
     contRobot = new ControllableRobot(0,100,100,80,scene);
@@ -97,14 +98,7 @@ Simulation::Simulation(QWidget *parent) {
     cancelBuildButton->setGeometry(QRect(QPoint(120, 660), QSize(100, 50)));
     connect(cancelBuildButton, SIGNAL(released()), this, SLOT(cancelBuild()));
 
-    QLineEdit * xcoord = new QLineEdit(this);
-    xcoord->setGeometry(QRect(QPoint(230, 610), QSize(100, 50)));
-    xcoord->setEchoMode(QLineEdit::Normal);
-    xcoord->setPlaceholderText("X coordinate");
-
-    QPushButton * newRobotButton = new QPushButton("New Robot", this);
-    newRobotButton->setGeometry(QRect(QPoint(120, 710), QSize(100, 50)));
-    connect(newRobotButton, SIGNAL(released()), this, SLOT(newRobot()));
+    addRobot = new AddRobot(this);
 }
 
 void Simulation::keyPressEvent(QKeyEvent *event){
@@ -154,6 +148,8 @@ void Simulation::setCursor(int size){
 void Simulation::mouseMoveEvent(QMouseEvent * event){
     if(cursor){
         cursor->setPos(event->pos());
+    }else{
+        addRobot->mouseMoveEvent(event);
     }
 }
 
@@ -199,10 +195,8 @@ void Simulation::mousePressEvent(QMouseEvent * event){
         }
     }
     else{
-        QGraphicsView::mousePressEvent(event);
+        addRobot->mousePressEvent(event);
     }
 }
 
-void Simulation::newRobot(){
-    //build = new Robot(0,0,0,80,scene);
-}
+
