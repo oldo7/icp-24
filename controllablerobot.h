@@ -8,6 +8,7 @@ public:
     ControllableRobot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene);
     void move();
     void rotate(int angleToRotate);
+    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // CONTROLLABLEROBOT_H

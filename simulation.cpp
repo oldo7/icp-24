@@ -40,11 +40,11 @@ Simulation::Simulation(QWidget *parent) {
 
 
     //make a controllable robot todo: button
-    contRobot = new ControllableRobot(0,100,100,80,scene);
-    contRobot->setFlag(QGraphicsItem::ItemIsFocusable);
-    contRobot->setFocus();
+    //contRobot = new ControllableRobot(0,100,100,80,scene);
+    //contRobot->setFlag(QGraphicsItem::ItemIsFocusable);
+    //contRobot->setFocus();
     // add the player to the scene
-    scene->addItem(contRobot);
+    //scene->addItem(contRobot);
 
     QGraphicsLineItem * right = new QGraphicsLineItem(0);
     right->setLine(1000,0,1000,800);
@@ -101,30 +101,11 @@ Simulation::Simulation(QWidget *parent) {
     addRobot = new AddRobot(this);
 }
 
+
 void Simulation::keyPressEvent(QKeyEvent *event){
-    // move the player left and right
-    if (event->key() == Qt::Key_Up){
-        if(robotTimer->isActive()){
-            contRobot->move();
-        }
-
-    }
-    else if (event->key() == Qt::Key_Right){
-        if(robotTimer->isActive()){
-            contRobot->rotate(5);
-        }
-
-    }
-    // shoot with the spacebar
-    else if (event->key() == Qt::Key_Left){
-        if(robotTimer->isActive()){
-            contRobot->rotate(-5);
-        }
-    }
-    else if (event->key() == Qt::Key_Down){
-        pauseSimulation();
-    }
+    addRobot->keyPressEvent(event);
 }
+
 
 void Simulation::pauseSimulation(){
     if(robotTimer->isActive()){
@@ -134,6 +115,7 @@ void Simulation::pauseSimulation(){
         robotTimer->start();
     }
 }
+
 
 void Simulation::setCursor(int size){
     if(cursor){

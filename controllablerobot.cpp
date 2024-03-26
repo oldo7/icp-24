@@ -12,7 +12,8 @@
 extern QTimer * robotTimer;
 
 ControllableRobot::ControllableRobot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene) : Robot(parent, initX, initY, scanAreaSize, scene){
-
+    //setFlag(QGraphicsItem::ItemIsFocusable);
+    //setFocus();
 }
 
 void ControllableRobot::move(){
@@ -36,4 +37,27 @@ void ControllableRobot::rotate(int angleToRotate){
     scanArea->setTransformOriginPoint(-15, 15);
     setRotation(angle);
     scanArea->setRotation(angle);
+}
+
+void ControllableRobot::keyPressEvent(QKeyEvent *event){
+    qDebug() << "i should move";
+    // move the player left and right
+    if (event->key() == Qt::Key_Up){
+        if(robotTimer->isActive()){
+            move();
+        }
+
+    }
+    else if (event->key() == Qt::Key_Right){
+        if(robotTimer->isActive()){
+            rotate(5);
+        }
+
+    }
+    // shoot with the spacebar
+    else if (event->key() == Qt::Key_Left){
+        if(robotTimer->isActive()){
+            rotate(-5);
+        }
+    }
 }

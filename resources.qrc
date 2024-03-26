@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/images">
         <file>robot.png</file>
+        <file>controllable.png</file>
     </qresource>
 </RCC>
