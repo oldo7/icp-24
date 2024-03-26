@@ -16,7 +16,7 @@ ControllableRobot::ControllableRobot(QGraphicsItem *parent, int initX, int initY
 }
 
 void ControllableRobot::move(){
-    // move enemy down
+    // move enemy
 
     if(!checkNoObstacles()){
         return;
