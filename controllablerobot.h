@@ -7,6 +7,7 @@ class ControllableRobot : public Robot
 public:
     ControllableRobot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene);
     void move();
+    void rotate(int angleToRotate);
 };
 
 #endif // CONTROLLABLEROBOT_H

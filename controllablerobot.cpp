@@ -22,9 +22,18 @@ void ControllableRobot::move(){
         return;
     }
 
-    double dy = 1*sin(qDegreesToRadians(angle));
-    double dx = 1*cos(qDegreesToRadians(angle));
+    double dy = 3*sin(qDegreesToRadians(angle));
+    double dx = 3*cos(qDegreesToRadians(angle));
 
     setPos(x() + dx,y() + dy);
     scanArea->setPos(x()+30,y());
+}
+
+void ControllableRobot::rotate(int angleToRotate){
+    angle += angleToRotate;
+
+    setTransformOriginPoint(15,15);
+    scanArea->setTransformOriginPoint(-15, 15);
+    setRotation(angle);
+    scanArea->setRotation(angle);
 }

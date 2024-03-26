@@ -44,7 +44,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int 
 }
 
 Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene){
-    setPixmap(QPixmap(":/images/robot.png"));       //todo: zmenit
+    setPixmap(QPixmap(":/images/robot.png"));       //todo: zmenit: controllable robot
     //setRect(0,0,30,30);
     setPos(initX, initY);
 

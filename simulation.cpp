@@ -39,7 +39,7 @@ Simulation::Simulation(QWidget *parent) {
     scene->addItem(robot2);
 
 
-    //make a controllable robot
+    //make a controllable robot todo: button
     contRobot = new ControllableRobot(0,100,100,80,scene);
     contRobot->setFlag(QGraphicsItem::ItemIsFocusable);
     contRobot->setFocus();
@@ -111,14 +111,14 @@ void Simulation::keyPressEvent(QKeyEvent *event){
     }
     else if (event->key() == Qt::Key_Right){
         if(robotTimer->isActive()){
-            contRobot->setRotate(5);
+            contRobot->rotate(5);
         }
 
     }
     // shoot with the spacebar
     else if (event->key() == Qt::Key_Left){
         if(robotTimer->isActive()){
-            contRobot->setRotate(-5);
+            contRobot->rotate(-5);
         }
     }
     else if (event->key() == Qt::Key_Down){
