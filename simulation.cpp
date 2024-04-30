@@ -6,6 +6,7 @@
 #include <QBrush>
 #include <QImage>
 #include "addrobot.h"
+#include "qlabel.h"
 #include "robot.h"
 #include "controllablerobot.h"
 #include <QPushButton>
@@ -17,12 +18,13 @@ QTimer * robotTimer;
 Simulation::Simulation(QWidget *parent) {
     // create the scene
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,1000,800); // make the scene 800x600 instead of infinity by infinity (default)
+    scene->setSceneRect(0,0,1000,850); // make the scene 800x600 instead of infinity by infinity (default)
 
     //robot timer
     robotTimer = new QTimer(this);
     //connect(robotTimer,SIGNAL(timeout()),robot2,SLOT(robotStep()));
     robotTimer->start(5);
+    robotTimer->stop();         //Simulation starts paused
 
 
     // make the newly created scene the scene to visualize (since Game is a QGraphicsView Widget,
@@ -30,7 +32,7 @@ Simulation::Simulation(QWidget *parent) {
     setScene(scene);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(1000,800);
+    setFixedSize(1000,850);
 
     // create a robot
     robot = new Robot(0,300,300, 150, 50, true, 45, scene);
@@ -66,36 +68,50 @@ Simulation::Simulation(QWidget *parent) {
 
     //pause / resume button
     // Create the button, make "this" the parent
-    pauseButton = new QPushButton("Pause / Resume", this);
-    // set size and location of the button
-    pauseButton->setGeometry(QRect(QPoint(10, 610), QSize(100, 50)));
+    pauseButton = new QPushButton("Start Simulation", this);
+    pauseButton->setGeometry(QRect(QPoint(20, 785), QSize(200, 50)));
+    pauseButton->setStyleSheet("font-size: 20px; font-weight: bold");
+    connect(pauseButton, SIGNAL(released()), this, SLOT(pauseSimulation()));
 
     //set cursor
     cursor = nullptr;
     setMouseTracking(true);
     build = nullptr;
 
-    // set size and location of the button
-    pauseButton->setGeometry(QRect(QPoint(10, 610), QSize(100, 50)));
+    //set obstacle size
+    obstacleSize = new QLineEdit(this);
+    obstacleSize->setGeometry(QRect(QPoint(130, 650), QSize(100, 50)));
+    obstacleSize->setEchoMode(QLineEdit::Normal);
+    obstacleSize->setPlaceholderText("Obstacle Size");
+    obstacleSize->setInputMask("0000;_");
+    obstacleSize->setText("60");
 
-    // Connect button signal to appropriate slot
-    connect(pauseButton, SIGNAL(released()), this, SLOT(pauseSimulation()));
+    //obstacle size label
+    QLabel * obstacleSizeLabel = new QLabel(this);
+    obstacleSizeLabel->setGeometry(QRect(QPoint(20, 650), QSize(100, 50)));
+    obstacleSizeLabel->setText("Obstacle Size:");
+
+
+    //new obstacle group label
+    QLabel * obstacleGroup = new QLabel(this);
+    obstacleGroup->setGeometry(QRect(QPoint(20, 600), QSize(150, 50)));
+    obstacleGroup->setText("New Obstacle:");
+    obstacleGroup->setStyleSheet("font-size: 18px; font-weight: bold; text-align: center");
+
+
+    QGraphicsRectItem * obstacleGroupBorder = new QGraphicsRectItem(0);
+    obstacleGroupBorder->setRect(15,610,225,150);
+    scene->addItem(obstacleGroupBorder);
+
+
 
     //obstacle button
-    QPushButton * createSmallObstacleButton = new QPushButton("Create small Obstacle", this);
-    createSmallObstacleButton->setGeometry(QRect(QPoint(10, 660), QSize(100, 50)));
+    QPushButton * createSmallObstacleButton = new QPushButton("Create Obstacle", this);
+    createSmallObstacleButton->setGeometry(QRect(QPoint(20, 700), QSize(140, 50)));
     connect(createSmallObstacleButton, SIGNAL(released()), this, SLOT(buildSmallObstacle()));
 
-    QPushButton * createMediumObstacleButton = new QPushButton("Create medium Obstacle", this);
-    createMediumObstacleButton->setGeometry(QRect(QPoint(10, 710), QSize(100, 50)));
-    connect(createMediumObstacleButton, SIGNAL(released()), this, SLOT(buildMediumObstacle()));
-
-    QPushButton * createLargeObstacleButton = new QPushButton("Create large Obstacle", this);
-    createLargeObstacleButton->setGeometry(QRect(QPoint(120, 610), QSize(100, 50)));
-    connect(createLargeObstacleButton, SIGNAL(released()), this, SLOT(buildLargeObstacle()));
-
     QPushButton * cancelBuildButton = new QPushButton("Cancel", this);
-    cancelBuildButton->setGeometry(QRect(QPoint(120, 660), QSize(100, 50)));
+    cancelBuildButton->setGeometry(QRect(QPoint(160, 700), QSize(70, 50)));
     connect(cancelBuildButton, SIGNAL(released()), this, SLOT(cancelBuild()));
 
     addRobot = new AddRobot(this);
@@ -110,9 +126,11 @@ void Simulation::keyPressEvent(QKeyEvent *event){
 void Simulation::pauseSimulation(){
     if(robotTimer->isActive()){
         robotTimer->stop();
+        pauseButton->setText("Resume Simulation");
     }
     else{
         robotTimer->start();
+        pauseButton->setText("Pause Simulation");
     }
 }
 
@@ -136,15 +154,7 @@ void Simulation::mouseMoveEvent(QMouseEvent * event){
 }
 
 void Simulation::buildSmallObstacle(){
-    buildObstacle(50);
-}
-
-void Simulation::buildMediumObstacle(){
-    buildObstacle(100);
-}
-
-void Simulation::buildLargeObstacle(){
-    buildObstacle(200);
+    buildObstacle(obstacleSize->text().toInt());
 }
 
 void Simulation::buildObstacle(int size){

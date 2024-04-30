@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QWidget>
+#include "qlineedit.h"
 #include "robot.h"
 #include <QGraphicsScene>
 #include <QPushButton>
@@ -22,11 +23,10 @@ public:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void buildObstacle(int size);
+    QLineEdit * obstacleSize;
 public slots:
     void pauseSimulation();
     void buildSmallObstacle();
-    void buildMediumObstacle();
-    void buildLargeObstacle();
     void cancelBuild();
 };
 
