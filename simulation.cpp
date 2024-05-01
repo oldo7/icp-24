@@ -9,11 +9,16 @@
 #include "qlabel.h"
 #include "robot.h"
 #include "controllablerobot.h"
+#include "savestate.h"
 #include <QPushButton>
 #include <QLineEdit>
+#include <QList>
 
 AddRobot * addRobot;
 QTimer * robotTimer;
+saveState * saveCurrentState;
+std::list<Robot*> robotList;
+std::list<QGraphicsRectItem*> obstacleList;
 
 Simulation::Simulation(QWidget *parent) {
     // create the scene
@@ -34,12 +39,18 @@ Simulation::Simulation(QWidget *parent) {
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(1000,850);
 
-    // create a robot
+    //zoznam robotov
+    //std::list<Robot*> robotList;
+
+    // create 2 starting robots
     robot = new Robot(0,300,300, 150, 50, true, 45, scene);
     Robot * robot2 = new Robot(0,100,300, 150, 45, true, 90, scene);
     scene->addItem(robot);
     scene->addItem(robot2);
 
+
+    robotList.push_back(robot);
+    robotList.push_back(robot2);
 
     //make a controllable robot todo: button
     //contRobot = new ControllableRobot(0,100,100,80,scene);
@@ -114,7 +125,11 @@ Simulation::Simulation(QWidget *parent) {
     cancelBuildButton->setGeometry(QRect(QPoint(160, 700), QSize(70, 50)));
     connect(cancelBuildButton, SIGNAL(released()), this, SLOT(cancelBuild()));
 
+    //buttons for adding robots
     addRobot = new AddRobot(this);
+
+    //saving and loading from/to file
+    saveCurrentState = new saveState(this);
 }
 
 
@@ -181,6 +196,9 @@ void Simulation::mousePressEvent(QMouseEvent * event){
             qDebug() << event->pos().x();
             scene->addItem(build);
             build->setPos(event->pos());
+
+            obstacleList.push_back(build);
+
             cursor = nullptr;
             build = nullptr;
             buildsize = 0;

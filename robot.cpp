@@ -21,6 +21,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int 
     //setRect(0,0,30,30);
     setPos(initX, initY);
 
+    scanSize = scanAreaSize;
     scanArea = new scanAreaT();
     scanArea->setRect(0,0,scanAreaSize,30);
     scanArea->setPos(x()+30,y());
@@ -48,6 +49,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGra
     //setRect(0,0,30,30);
     setPos(initX, initY);
 
+    scanSize = scanAreaSize;
     scanArea = new scanAreaT();
     scanArea->setRect(0,0,scanAreaSize,30);
     scanArea->setPos(x()+30,y());
@@ -67,7 +69,6 @@ void Robot::robotStep(){
 }
 
 void Robot::move(){
-    // move enemy down
     if(!checkNoObstacles()){
         setRotate(rotateAngle);
         return;

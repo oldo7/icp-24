@@ -8,14 +8,15 @@
 class Robot:public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
 protected:
-    double angle;
-    scanAreaT * scanArea;
     bool checkNoObstacles();
-    int rotateAngle;
-    double angleToRotate;
     void move();
     void rotate();
+    scanAreaT * scanArea;
 public:
+    double angle;
+    int scanSize;
+    int rotateAngle;
+    double angleToRotate;
     Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateAngle, bool rotateClockwise, int initRotate, QGraphicsScene * scene);
     Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene);
     void setRotate(int angle);

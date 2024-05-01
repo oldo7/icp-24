@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 extern QTimer * robotTimer;
+extern std::list<Robot*> robotList;
 
 AddRobot::AddRobot(Simulation * simulation) : QObject() {
     contRobot = nullptr;
@@ -243,27 +244,27 @@ void Simulation::cancelBuild(){
 */
 
 void AddRobot::mousePressEvent(QMouseEvent * event){
-    qDebug() << "clicked in addrobot" << robotBuild;
     if(robotBuild == 1){
         if(event->pos().x() + 30 < 1000 && event->pos().y() + 30 < 600){
-            qDebug() << "creating new robot";
             Robot * newRobot = new Robot(0, event->pos().x(), event->pos().y(),detectionArea->text().toInt(), turnAngle->text().toInt(), turnClockwise,rotation->text().toInt(),simulationScene->scene);
             simulationScene->scene->addItem(newRobot);
             simulationScene->scene->removeItem(robotCursor);
             delete robotCursor;
             robotCursor = nullptr;
             robotBuild = 0;
+            robotList.push_back(newRobot);
+
         }
     }
     if(robotBuild == 2){
         if(event->pos().x() + 30 < 1000 && event->pos().y() + 30 < 600){
-            qDebug() << "creating new controllable robot";
             contRobot = new ControllableRobot(0, event->pos().x(), event->pos().y(),controllableDetectionArea->text().toInt(), simulationScene->scene);
             simulationScene->scene->addItem(contRobot);
             simulationScene->scene->removeItem(robotCursor);
             delete robotCursor;
             robotCursor = nullptr;
             robotBuild = 0;
+            //pridat do zoznamu
         }
     }
     //else{

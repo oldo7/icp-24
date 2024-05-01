@@ -17,10 +17,10 @@ private:
     QLineEdit * controllableDetectionArea;
     void setRobotCursor();
     int robotBuild;
-    ControllableRobot * contRobot;
     QPushButton * turnDirection;
     bool turnClockwise;
 public:
+    ControllableRobot * contRobot;
     AddRobot(Simulation * simulation);
     QGraphicsPixmapItem * robotCursor;
     void mousePressEvent(QMouseEvent * event);
