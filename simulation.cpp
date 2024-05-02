@@ -39,19 +39,6 @@ Simulation::Simulation(QWidget *parent) {
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(1000,850);
 
-    //zoznam robotov
-    //std::list<Robot*> robotList;
-
-    // create 2 starting robots
-    robot = new Robot(0,300,300, 150, 50, true, 45, scene);
-    Robot * robot2 = new Robot(0,100,300, 150, 45, true, 90, scene);
-    scene->addItem(robot);
-    scene->addItem(robot2);
-
-
-    robotList.push_back(robot);
-    robotList.push_back(robot2);
-
     //make a controllable robot todo: button
     //contRobot = new ControllableRobot(0,100,100,80,scene);
     //contRobot->setFlag(QGraphicsItem::ItemIsFocusable);
