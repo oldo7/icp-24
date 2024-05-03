@@ -40,7 +40,6 @@ void ControllableRobot::rotate(int angleToRotate){
 }
 
 void ControllableRobot::keyPressEvent(QKeyEvent *event){
-    qDebug() << "i should move";
     // move the player left and right
     if (event->key() == Qt::Key_Up){
         if(robotTimer->isActive()){
@@ -54,7 +53,6 @@ void ControllableRobot::keyPressEvent(QKeyEvent *event){
         }
 
     }
-    // shoot with the spacebar
     else if (event->key() == Qt::Key_Left){
         if(robotTimer->isActive()){
             rotate(-5);

@@ -17,8 +17,8 @@ public:
     int scanSize;
     int rotateAngle;
     double angleToRotate;
-    Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateAngle, bool rotateClockwise, int initRotate, QGraphicsScene * scene);
-    Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene);
+    Robot(QGraphicsItem *parent, double initX, double initY, int scanAreaSize, int rotateAngle, bool rotateClockwise, double initRotate, QGraphicsScene * scene);
+    Robot(QGraphicsItem *parent, double initX, double initY, int scanAreaSize, QGraphicsScene * scene);
     void setRotate(int angle);
 public slots:
     void robotStep();

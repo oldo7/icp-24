@@ -6,6 +6,7 @@
 #include "simulation.h"
 #include <QDebug>
 #include <QGraphicsPixmapItem>
+#include <cmath>
 
 #include "unistd.h"
 #include <QThread>
@@ -13,7 +14,7 @@
 extern Simulation * simulation;
 extern QTimer * robotTimer;
 
-Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int rotateBy, bool rotateClockwise, int initRotate, QGraphicsScene * scene): QObject(), QGraphicsPixmapItem(parent){
+Robot::Robot(QGraphicsItem *parent, double initX, double initY, int scanAreaSize, int rotateBy, bool rotateClockwise, double initRotate, QGraphicsScene * scene): QObject(), QGraphicsPixmapItem(parent){
     //subscribe to the global robot timer
     connect(robotTimer,SIGNAL(timeout()),this,SLOT(robotStep()));
 
@@ -44,7 +45,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, int 
     scanArea->setRotation(angle);
 }
 
-Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGraphicsScene * scene){
+Robot::Robot(QGraphicsItem *parent, double initX, double initY, int scanAreaSize, QGraphicsScene * scene){
     setPixmap(QPixmap(":/images/controllable.png"));       //todo: zmenit: controllable robot
     //setRect(0,0,30,30);
     setPos(initX, initY);
@@ -61,6 +62,7 @@ Robot::Robot(QGraphicsItem *parent, int initX, int initY, int scanAreaSize, QGra
 }
 
 void Robot::robotStep(){
+    qDebug() << "angle: " << angle;
     if(angleToRotate == 0){
         move();
     }else{
@@ -81,6 +83,7 @@ void Robot::move(){
     scanArea->setPos(x()+30,y());
 
 
+
 }
 
 void Robot::rotate(){
@@ -92,6 +95,8 @@ void Robot::rotate(){
         angle -= 1;
         angleToRotate += 1;
     }
+
+    angle = std::fmod(angle, 360);
 
     setTransformOriginPoint(15,15);
     scanArea->setTransformOriginPoint(-15, 15);

@@ -180,7 +180,7 @@ void Simulation::cancelBuild(){
 void Simulation::mousePressEvent(QMouseEvent * event){
     if(build){
         if(event->pos().x() + buildsize < 1000 && event->pos().y() + buildsize < 600){
-            qDebug() << event->pos().x();
+            //qDebug() << event->pos().x();
             scene->addItem(build);
             build->setPos(event->pos());
 
