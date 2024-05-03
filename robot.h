@@ -1,9 +1,11 @@
 #ifndef ROBOT_H
 #define ROBOT_H
-#include "scanAreaT.h"
+#include "scanareat.h"
 #include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QGraphicsItem>
+#include <cmath>
+#include <QtMath>
 
 class Robot:public QObject, public QGraphicsPixmapItem{
     Q_OBJECT

@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QList>
+#include <QDebug>
 
 AddRobot * addRobot;
 QTimer * robotTimer;
